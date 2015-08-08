@@ -1,0 +1,29 @@
+{
+  "generator-angular-package": {
+    "props": {
+      "author": {
+        "name": "Marco Vinicio Góngora",
+        "email": "gongora@gmail.com"
+      },
+      "yourModule": {
+        "original": "ngGts",
+        "camelized": "ngGts",
+        "dasherized": "ng-gts",
+        "slugified": "nggts",
+        "parts": [
+          "nggts"
+        ]
+      },
+      "includeModuleDirectives": true,
+      "includeModuleFilters": true,
+      "includeModuleServices": true,
+      "includeModuleControllers": false,
+      "includeAngularModuleResource": false,
+      "includeAngularModuleCookies": false,
+      "includeAngularModuleSanitize": true,
+      "moduleDirectory": "modules/nggts",
+      "moduleUnitTestDirectory": "test/unit/nggts",
+      "moduleUnitE2eDirectory": "test/e2e/nggts"
+    }
+  }
+}
