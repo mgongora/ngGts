@@ -11,19 +11,21 @@
       });
 
   // Modules
-  
+  angular.module('nggts.templates', []);
+
   angular.module('nggts.directives', []);
-  
-  
+
+
   angular.module('nggts.filters', []);
-  
-  
+
+
   angular.module('nggts.services', []);
-  
-  
+
+
   angular.module('nggts',
       [
         'nggts.config',
+        'nggts.templates',
         'nggts.directives',
         'nggts.filters',
         'nggts.services',

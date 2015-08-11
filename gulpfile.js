@@ -7,6 +7,9 @@ var path = require('path');
 var plumber = require('gulp-plumber');
 var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
+var templateCache = require('gulp-angular-templatecache');
+var minifyHTML = require('gulp-minify-html');
+
 
 /**
  * File patterns
@@ -18,13 +21,22 @@ var rootDirectory = path.resolve('./');
 // Source directory for build process
 var sourceDirectory = path.join(rootDirectory, './modules');
 
+var templateFiles = [
+
+  // add all template files
+  path.join(sourceDirectory, '/**/*.html')
+
+];
+
 var sourceFiles = [
 
   // Make sure module files are handled first
   path.join(sourceDirectory, '/**/*.module.js'),
 
   // Then add all JavaScript files
-  path.join(sourceDirectory, '/**/*.js')
+  path.join(sourceDirectory, '/**/*.js'),
+
+
 ];
 
 var lintFiles = [
@@ -37,17 +49,52 @@ gulp.task('build', function() {
   gulp.src(sourceFiles)
     .pipe(plumber())
     .pipe(concat('nggts.js'))
-    .pipe(gulp.dest('./dist/'))
-    .pipe(uglify())
-    .pipe(rename('nggts.min.js'))
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest('./temp/'));
 });
+
+gulp.task('dist', function(){
+  return gulp.src('./temp/*.js')
+      .pipe(concat('nggts.js'))
+      .pipe(gulp.dest('./dist'))
+      .pipe(uglify())
+      .pipe(rename('nggts.min.js'))
+      .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('minify-templates', function() {
+  var opts = {
+    conditionals: true,
+    spare:true,
+    quotes: false,
+    comments: true
+  };
+
+  return gulp.src(templateFiles)
+    .pipe(minifyHTML(opts))
+    .pipe(gulp.dest('./temp'));
+});
+/*
+gulp.task('build-templates', function() {
+  gulp.src('./temp/!**!/!*.html')
+    .pipe(plumber())
+    .pipe(templateCache('templates.js', {module:'nggts.templates'}))
+    .pipe(gulp.dest('./temp'));
+});
+*/
+
+gulp.task('build-templates', function() {
+  gulp.src(templateFiles)
+    .pipe(plumber())
+    .pipe(templateCache('templates.js', {module:'nggts.templates'}))
+    .pipe(gulp.dest('./temp'));
+});
+
 
 /**
  * Process
  */
 gulp.task('process-all', function (done) {
-  runSequence('jshint', 'test-src', 'build', done);
+  runSequence('jshint', 'test-src', 'build', 'build-templates', 'dist', done);
 });
 
 /**
@@ -57,6 +104,7 @@ gulp.task('watch', function () {
 
   // Watch JavaScript files
   gulp.watch(sourceFiles, ['process-all']);
+  gulp.watch(templateFiles, ['process-all']);
 });
 
 /**

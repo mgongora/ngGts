@@ -1,0 +1,82 @@
+
+<div class="modal-header">
+  <button ng-click="$dismiss('exit')" type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+  <div class="caption font-blue">
+    <i class="icon-settings font-blue"></i>
+    <span class="caption-subject bold uppercase"> {{model.title}} - {{model.action}}</span>
+  </div>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col col-md-12 form">
+      <div role="form" class="form-horizontal">
+        <div class="form-body">
+          <div ng-repeat="col in model.columns | filter:showColumn | orderBy:'position||9999'">
+            <div class="form-group form-md-floating-label" ng-class="{'form-md-line-input' : col.type != 'selection' && col.type != 'multi-selection', 'form-md-dropdown-input' : col.type == 'selection' || col.type == 'multi-selection'}">
+              <label class="col-md-2 control-label" for="{{'form_control_'+col.name}}">{{col.title}}</label>
+              <!--text-->
+              <div ng-if="col.type == 'text'" class="col-md-10">
+                <input type="text" ng-model="model.data[col.name]" ng-disabled="!isEditable(col.editable)" tabindex="{{col.position}}" class="form-control" id="{{'form_control_'+col.name}}" placeholder="Ingresar {{col.title}}">
+                <div class="form-control-focus"></div>
+              </div>
+
+              <!--text-->
+              <div ng-if="col.type == 'password'" class="col-md-10">
+                <input type="password" ng-model="model.data[col.name]" ng-disabled="!isEditable(col.editable)" tabindex="{{col.position}}" class="form-control" id="{{'form_control_'+col.name}}" placeholder="Ingresar {{col.title}}">
+                <div class="form-control-focus"></div>
+              </div>
+
+              <!--boolean-->
+              <div ng-if="col.type == 'boolean'" class="col-md-10">
+                <div class="md-checkbox md-checkbox-inline">
+                  <input ng-model="model.data[col.name]" ng-disabled="!isEditable(col.editable)" type="checkbox" tabindex="{{col.position}}" id="{{'form_control_'+col.name}}" class="md-check">
+                  <label for="{{'form_control_'+col.name}}">
+                    <span></span>
+                    <span class="check"></span>
+                    <span class="box"></span>
+                  </label>
+                  <div class="form-control-focus"></div>
+                </div>
+              </div>
+
+              <!-- foreign key -->
+              <div ng-if="col.type == 'foreign-key'" class="col-md-10" tabindex="{{col.position}}">
+                <input type="text" ng-model="model.data[col.name]" ng-disabled="!isEditable(col.editable)" typeahead="item[col.value] as item[col.text] for item in col.options | filter:$viewValue | limitTo:8" typeahead-input-formatter="formatLabel($model, col.options, col.value, col.text)" class="form-control" id="{{'form_control_'+col.name}}" placeholder="Ingresar {{col.title}}">
+                <div class="form-control-focus"></div>
+              </div>
+
+              <!-- selection -->
+              <div ng-if="col.type == 'selection'" class="col-md-10">
+                <ui-select ng-model="model.data[col.name]" theme="bootstrap" ng-disabled="!isEditable(col.editable)">
+                  <ui-select-match placeholder="Ingrese texto para buscar...">{{$select.selected[col.text]}}</ui-select-match>
+                  <ui-select-choices repeat="item[col.value] as item in col.options | filter: $select.search">
+                    <div ng-bind-html="item[col.text] | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+              <!-- multi selection -->
+              <div ng-if="col.type == 'multi-selection'" class="col-md-10">
+                <ui-select multiple ng-model="model.data[col.name]" theme="bootstrap" close-on-select="false" ng-disabled="!isEditable(col.editable)">
+                  <ui-select-match placeholder="Ingrese texto para buscar...">{{$item[col.text]}}</ui-select-match>
+                  <ui-select-choices repeat="item[col.value] as item in col.options | filter: $select.search">
+                    <div ng-bind-html="item[col.text] | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+            </div>
+          </div>
+          <alert ng-show="alert.show" type="{{alert.type}}" close="closeAlert()">{{alert.msg}}</alert>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+
+  </div>
+</div>
+<div class="modal-footer">
+  <button ng-click="cancel()" type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
+  <button ng-click="save()" ng-if="isEditable('$form')" type="button" class="btn btn-primary">Guardar</button>
+</div>
