@@ -13,14 +13,14 @@
         <div class="form-body">
           <div ng-repeat="col in model.columns | filter:showColumn | orderBy:'position||9999'">
             <div class="form-group form-md-floating-label" ng-class="{'form-md-line-input' : col.type != 'selection' && col.type != 'multi-selection', 'form-md-dropdown-input' : col.type == 'selection' || col.type == 'multi-selection'}">
-              <label class="col-md-2 control-label" for="{{'form_control_'+col.name}}">{{col.title}}</label>
+              <label ng-if="col.type !== 'details'" class="col-md-2 control-label" for="{{'form_control_'+col.name}}">{{col.title}}</label>
               <!--text-->
               <div ng-if="col.type == 'text'" class="col-md-10">
                 <input type="text" ng-model="model.data[col.name]" ng-disabled="!isEditable(col.editable)" tabindex="{{col.position}}" class="form-control" id="{{'form_control_'+col.name}}" placeholder="Ingresar {{col.title}}">
                 <div class="form-control-focus"></div>
               </div>
 
-              <!--text-->
+              <!--password-->
               <div ng-if="col.type == 'password'" class="col-md-10">
                 <input type="password" ng-model="model.data[col.name]" ng-disabled="!isEditable(col.editable)" tabindex="{{col.position}}" class="form-control" id="{{'form_control_'+col.name}}" placeholder="Ingresar {{col.title}}">
                 <div class="form-control-focus"></div>
@@ -28,7 +28,9 @@
 
               <!--boolean-->
               <div ng-if="col.type == 'boolean'" class="col-md-10">
-                <div class="md-checkbox md-checkbox-inline">
+                <input type="text" ng-model="model.data[col.name]" ng-disabled="!isEditable(col.editable)" tabindex="{{col.position}}" class="form-control" id="{{'form_control_'+col.name}}" placeholder="Ingresar {{col.title}}">
+                <div class="form-control-focus"></div>
+                <!--<div class="md-checkbox md-checkbox-inline">
                   <input ng-model="model.data[col.name]" ng-disabled="!isEditable(col.editable)" type="checkbox" tabindex="{{col.position}}" id="{{'form_control_'+col.name}}" class="md-check">
                   <label for="{{'form_control_'+col.name}}">
                     <span></span>
@@ -36,7 +38,7 @@
                     <span class="box"></span>
                   </label>
                   <div class="form-control-focus"></div>
-                </div>
+                </div>-->
               </div>
 
               <!-- foreign key -->
@@ -65,6 +67,10 @@
                 </ui-select>
               </div>
 
+              <!-- details -->
+              <div ng-if="col.type == 'details'" class="col-md-12">
+                <gts-crud grid-template="nggts/directives/gts-crud/gts-crud-details-list.html" title="{{col.title}}" columns="col.columns" items="model.data[col.name]" icon="fa fa-users" page-size="5"></gts-crud>
+              </div>
             </div>
           </div>
           <alert ng-show="alert.show" type="{{alert.type}}" close="closeAlert()">{{alert.msg}}</alert>

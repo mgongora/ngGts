@@ -63,38 +63,33 @@ gulp.task('dist', function(){
 
 gulp.task('minify-templates', function() {
   var opts = {
-    conditionals: true,
-    spare:true,
-    quotes: false,
-    comments: true
+    empty:true
   };
 
   return gulp.src(templateFiles)
     .pipe(minifyHTML(opts))
     .pipe(gulp.dest('./temp'));
 });
-/*
 gulp.task('build-templates', function() {
-  gulp.src('./temp/!**!/!*.html')
+  gulp.src('./temp/**/*.html')
     .pipe(plumber())
     .pipe(templateCache('templates.js', {module:'nggts.templates'}))
     .pipe(gulp.dest('./temp'));
 });
-*/
 
-gulp.task('build-templates', function() {
-  gulp.src(templateFiles)
-    .pipe(plumber())
-    .pipe(templateCache('templates.js', {module:'nggts.templates'}))
-    .pipe(gulp.dest('./temp'));
-});
+//gulp.task('build-templates', function() {
+//  gulp.src(templateFiles)
+//    .pipe(plumber())
+//    .pipe(templateCache('templates.js', {module:'nggts.templates'}))
+//    .pipe(gulp.dest('./temp'));
+//});
 
 
 /**
  * Process
  */
 gulp.task('process-all', function (done) {
-  runSequence('jshint', 'test-src', 'build', 'build-templates', 'dist', done);
+  runSequence('jshint', 'test-src', 'build', 'minify-templates', 'build-templates' ,'dist', done);
 });
 
 /**
