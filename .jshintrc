@@ -23,7 +23,7 @@
   "maxdepth": 5,
   "maxstatements": 40,
   "maxcomplexity": 8,
-  "maxlen": 120,
+  "maxlen": 150,
 
   "asi": false,
   "boss": false,
@@ -41,7 +41,7 @@
   "loopfunc": true,
   "maxerr": false,
   "moz": false,
-  "multistr": false,
+  "multistr": true,
   "notypeof": false,
   "proto": false,
   "scripturl": false,
@@ -56,6 +56,7 @@
 
   "globals": {
     "angular": false,
-    "$": false
+    "$": false,
+    "_": false
   }
 }
